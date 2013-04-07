@@ -59,7 +59,7 @@ func usageUsage() {
 	fmt.Println(kilt.GraveTrim(`
 
     # To dogbag a directory:
-    $ dogbag ./assets 
+    $ dogbag ./assets
 
     // assets.go:
     dogbag, err := assets()
@@ -105,7 +105,7 @@ func usageUsage() {
     (You can use this behavior to test if a bag has been deployed, if necessary)
 
  Open(path ...string) (io.ReadCloser, error)
-    Open will open the asset at the given bag path for reading, 
+    Open will open the asset at the given bag path for reading,
     whether the asset is in memory or on disk.
 
         file, err := bag.Open("tmpl/main.tmpl")
