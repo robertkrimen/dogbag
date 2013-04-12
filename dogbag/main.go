@@ -293,7 +293,16 @@ func fmtPipe(input func(io.Writer) error, output io.Writer) error {
 
 	inputOutput := output
 
-	if !*flag_fmt {
+	gofmt := false
+	// First, see if gofmt is available
+	if *flag_fmt {
+		err := exec.Command("gofmt").Run()
+		if err == nil {
+			gofmt = true
+		}
+	}
+
+	if !gofmt {
 		return input(output)
 	}
 
