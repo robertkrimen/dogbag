@@ -1,8 +1,8 @@
 package main
 
 import (
+	. "./terst"
 	"bytes"
-	. "github.com/robertkrimen/terst"
 	"path/filepath"
 	"testing"
 )

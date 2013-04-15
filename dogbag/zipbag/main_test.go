@@ -1,9 +1,9 @@
 package main
 
 import (
+	. "../terst"
 	"crypto/sha1"
 	"encoding/hex"
-	. "github.com/robertkrimen/terst"
 	"io"
 	"io/ioutil"
 	"os"
