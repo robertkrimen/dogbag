@@ -163,7 +163,7 @@ var (
 	flag_output   = flag.String("output", "", "The name of the dogbag .go file to create/overwrite. Emit to stdout with -")
 	flag_package  = flag.String("package", "", "The package to put the dogbag .go file in")
 	flag_function = flag.String("function", "", "The name of the function returning the dogbag")
-	flag_fmt      = flag.Bool("fmt", true, "Postprocess through gofmt")
+	flag_fmt      = flag.Bool("fmt", true, "Process through gofmt")
 	flag_usage    = flag.Bool("usage", false, "More help: Bag interface description, etc.")
 )
 

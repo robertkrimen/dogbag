@@ -3,7 +3,7 @@
 test: zipbag_template.go
 	$(MAKE) -C zipbag $@
 	go test -i
-	go test -v
+	go test
 	$(MAKE) build
 	./dogbag -output /dev/null ./test/assets 
 
@@ -11,10 +11,10 @@ release:
 	$(MAKE) -C .. $@
 
 install: test
-	go install -v
+	go install
 
 build:
-	go build -v
+	go build
 
 clean:
 	rm -f dogbag assets_dogbag.go

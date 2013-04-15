@@ -9,7 +9,7 @@ release: test
 
 install: test
 	$(MAKE) -C dogbag $@
-	go install -v
+	go install
 
 build:
 	$(MAKE) -C dogbag $@

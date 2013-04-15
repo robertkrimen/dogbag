@@ -2,14 +2,14 @@
 
 test:
 	go test -i
-	go test -v
+	go test
 	$(MAKE) build
 
-release: test
-	godocdown -signature . > README.markdown
+release:
+	$(MAKE) -C .. $@
 
 build:
-	go build -v
+	go build
 
 clean:
 	rm -f zipbag
