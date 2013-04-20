@@ -12,5 +12,5 @@ build:
 	go build
 
 clean:
-	rm -f zipbag
+	rm -f zipbag test_dogbag.go
 	rm -rf test.*

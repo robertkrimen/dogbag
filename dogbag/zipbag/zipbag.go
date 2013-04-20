@@ -136,5 +136,3 @@ func (self __DogbagBagType) digest() string {
 	}
 	return self.hash
 }
-
-var __DogbagBagData = ``

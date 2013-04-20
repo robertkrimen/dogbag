@@ -51,7 +51,6 @@ import (
 	"go/build"
 	"io"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 )
@@ -164,7 +163,8 @@ var (
 	flag_output   = flag.String("output", "", "The name of the dogbag .go file to create/overwrite. Emit to stdout with -")
 	flag_package  = flag.String("package", "", "The package to put the dogbag .go file in")
 	flag_function = flag.String("function", "", "The name of the function returning the dogbag")
-	flag_fmt      = flag.Bool("fmt", true, "Process through gofmt")
+	flag_fmt      = true // This (and the line below) is an ugly hack to facilitate main/main_stub
+	_flag_fmt     = flag.Bool("fmt", flag_fmt, "Process through gofmt")
 	flag_usage    = flag.Bool("usage", false, "More help: Bag interface description, etc.")
 )
 
@@ -182,6 +182,7 @@ var (
 
 func flagParse() {
 	flag.Parse()
+	flag_fmt = *_flag_fmt
 
 	if *flag_usage {
 		usageUsage()
@@ -288,48 +289,6 @@ func filebag() error {
 	return fmtPipe(func(output io.Writer) error {
 		return _filebag(bagInput, global.bagPackage, global.bagFunction, output)
 	}, bagOutput)
-}
-
-func fmtPipe(input func(io.Writer) error, output io.Writer) error {
-
-	inputOutput := output
-
-	gofmt := false
-	// First, see if gofmt is available
-	if *flag_fmt {
-		err := exec.Command("gofmt").Run()
-		if err == nil {
-			gofmt = true
-		}
-	}
-
-	if !gofmt {
-		return input(output)
-	}
-
-	cmd := exec.Command("gofmt")
-	cmdStdin, err := cmd.StdinPipe()
-	if err == nil {
-		cmd.Stderr = os.Stderr
-		cmd.Stdout = output
-
-		err = cmd.Start()
-		if err == nil {
-			inputOutput = cmdStdin
-		} else {
-			cmdStdin.Close()
-			cmd = nil
-		}
-	}
-
-	err = input(inputOutput)
-	if cmd != nil {
-		cmdStdin.Close()
-		if err == nil {
-			err = cmd.Wait()
-		}
-	}
-	return err
 }
 
 func zipbag() error {

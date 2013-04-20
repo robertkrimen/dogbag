@@ -1,7 +1,10 @@
 .PHONY: test release build clean install
 
-test: zipbag_template.go
+test:
+	go build -o stub ./zipbag/stub
+	./stub > zipbag/test_dogbag.go
 	$(MAKE) -C zipbag $@
+	$(MAKE) zipbag_template.go
 	go test -i
 	go test
 	$(MAKE) build
@@ -17,7 +20,7 @@ build:
 	go build
 
 clean:
-	rm -f dogbag assets_dogbag.go
+	rm -f dogbag assets_dogbag.go stub
 	$(MAKE) -C zipbag $@
 
 zipbag_template.go: zipbag_template/main.go zipbag/zipbag.go
