@@ -23,5 +23,9 @@ To dogbag a directory:
 */
 package dogbag
 
+import (
+	_ "github.com/robertkrimen/dogbag/dogbag"
+)
+
 // TODO Try and detect the current package
 // FIXME The empty flag being used for a filebag?
