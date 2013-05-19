@@ -45,7 +45,7 @@ Usage
 package main
 
 import (
-	"flag"
+	Flag "flag"
 	"fmt"
 	"github.com/robertkrimen/isatty"
 	"go/build"
@@ -119,9 +119,7 @@ func usageUsage() {
 
 func usage() {
 	fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
-	if true {
-		flag.PrintDefaults()
-	}
+	kilt.PrintDefaults(flag)
 	fmt.Fprintf(os.Stderr, kilt.GraveTrim(`
 
     # To dogbag a file:
@@ -158,14 +156,23 @@ func usage() {
 }
 
 var (
+	flag          = Flag.NewFlagSet("", Flag.ExitOnError)
 	flag_empty    = flag.Bool("empty", false, "Make an empty (zip) dogbag (for development)")
-	flag_input    = flag.String("input", "", "The input for the dogbag. Can either be a file or a directory")
-	flag_output   = flag.String("output", "", "The name of the dogbag .go file to create/overwrite. Emit to stdout with -")
 	flag_package  = flag.String("package", "", "The package to put the dogbag .go file in")
 	flag_function = flag.String("function", "", "The name of the function returning the dogbag")
 	flag_fmt      = true // This (and the line below) is an ugly hack to facilitate main/main_stub
 	_flag_fmt     = flag.Bool("fmt", flag_fmt, "Process through gofmt")
 	flag_usage    = flag.Bool("usage", false, "More help: Bag interface description, etc.")
+
+	flag_input  = ""
+	flag_output = ""
+	_           = func() byte {
+		flag.StringVar(&flag_input, "input", flag_input, "The input for the dogbag. Can either be a file or a directory")
+		flag.StringVar(&flag_input, "i", flag_input, string(0))
+		flag.StringVar(&flag_output, "output", flag_output, "The name of the dogbag .go file to create/overwrite. Emit to stdout with -")
+		flag.StringVar(&flag_output, "o", flag_output, string(0))
+		return 0
+	}()
 )
 
 var (
@@ -181,7 +188,8 @@ var (
 )
 
 func flagParse() {
-	flag.Parse()
+	flag.Usage = usage
+	flag.Parse(os.Args[1:])
 	flag_fmt = *_flag_fmt
 
 	if *flag_usage {
@@ -190,7 +198,7 @@ func flagParse() {
 
 	index := 0 // flag.Arg(...)
 
-	global.input = *flag_input
+	global.input = flag_input
 	if global.input == "" {
 		if !isatty.Check(os.Stdin.Fd()) {
 			global.input = "-"
@@ -233,7 +241,7 @@ func flagParse() {
 		dbgf(`No function name specified: Using "%s"`, global.bagFunction)
 	}
 
-	global.output = *flag_output
+	global.output = flag_output
 	if global.output == "" {
 		global.output = flag.Arg(index)
 		if global.output == "" {
